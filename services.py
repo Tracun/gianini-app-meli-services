@@ -13,6 +13,7 @@ class Services:
         self.devToken = ""
         self.version = "v1.0.2"
         load_dotenv()
+        self.readConfig()
 
     def readConfig(self):
         
