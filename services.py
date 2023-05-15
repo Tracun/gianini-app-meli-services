@@ -4,7 +4,6 @@ import requests
 import sys
 import urllib.parse
 import configparser
-from firebase import firebase
 
 class Services:
 
