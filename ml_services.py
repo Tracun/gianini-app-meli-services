@@ -18,7 +18,7 @@ class ML_services:
         'Authorization': f"Bearer {os.getenv('TOKEN')}"
         }
         data = requests.get(self.meliEndpoint + resource, headers=headers)
-        # print(f"data = {data.json()}")
+        print(f"data = {data.json()}")
         
         if topic == 'orders':
             

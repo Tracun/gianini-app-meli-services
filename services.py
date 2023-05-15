@@ -1,9 +1,7 @@
 import datetime
-import json
 import requests
-import sys
-import urllib.parse
-import configparser
+import os
+from dotenv import load_dotenv
 
 class Services:
 
@@ -14,22 +12,21 @@ class Services:
         self.devPhone = ""
         self.devToken = ""
         self.version = "v1.0.2"
-        self.readConfig()
+        load_dotenv()
 
     def readConfig(self):
-        parser = configparser.ConfigParser()
-        parser.read_file(open(r'config.txt'))
-        self.gianiniPhone = parser.get('config', 'gianiniPhone')
-        self.gianiniToken = parser.get('config', 'gianiniToken')
+        
+        self.gianiniPhone = os.getenv('GIANINIPHONE')
+        self.gianiniToken = os.getenv('GIANINITOKEN')
 
-        self.devPhone = parser.get('config', 'devPhone')
-        self.devToken = parser.get('config', 'devToken')
+        self.devPhone = os.getenv('DEVPHONE')
+        self.devToken = os.getenv('DEVTOKEN')
 
-        self.vitorPhone = parser.get('config', 'vitorPhone')
-        self.vitorToken = parser.get('config', 'vitorToken')
+        self.vitorPhone = os.getenv('VITORPHONE')
+        self.vitorToken = os.getenv('VITORTOKEN')
 
-        self.amadeuPhone = parser.get('config', 'amadeuPhone')
-        self.amadeuToken = parser.get('config', 'amadeuToken')
+        self.amadeuPhone = os.getenv('AMADEUPHONE')
+        self.amadeuToken = os.getenv('AMADEUTOKEN')
 
     def convertStr2Date(self, strDate):
         date_time_obj = datetime.datetime.strptime(
