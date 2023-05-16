@@ -35,10 +35,14 @@ class ML_services:
                 print(response.text)
                 
                 set_key(".env", 'TOKEN', response.json()['access_token'])
+                os.system(f"heroku config:set TOKEN = {response.json()['access_token']}")
+                
                 set_key(".env", 'REFRESH_TOKEN', response.json()['refresh_token'])
+                os.system(f"heroku config:set REFRESH_TOKEN = {response.json()['refresh_token']}")
                 
                 expires = str(datetime.now() + timedelta(seconds=float(response.json()['expires_in'])))
                 set_key(".env", 'EXPIRES', expires)
+                os.system(f"heroku config:set EXPIRES = {expires}")
                 
                 load_dotenv()
                 print("Token renovado ...")
