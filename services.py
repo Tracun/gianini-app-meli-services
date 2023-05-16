@@ -2,18 +2,36 @@ import datetime
 import requests
 import os
 from dotenv import load_dotenv
+from firebase import firebase
 
 class Services:
 
     def __init__(self):
+        load_dotenv()
+        # self.firebaseAuth = firebase.FirebaseAuthentication(os.getenv("FIREBASE_SECRET"), os.getenv("FIREBASE_EMAIL"))
+        self.firebaseApp = firebase.FirebaseApplication(
+            'https://gianini-manutencao.firebaseio.com/', None)
         self.whatsappURL = "https://api.callmebot.com/whatsapp.php?"
         self.gianiniPhone = ""
         self.gianiniToken = ""
         self.devPhone = ""
         self.devToken = ""
         self.version = "v1.0.2"
-        load_dotenv()
         self.readConfig()
+        
+    def setToken(self, data):
+        try:            
+            return self.firebaseApp.patch('ml_service', data)
+        except Exception as e:
+            print(e)
+        return None
+        
+    def getToken(self):
+        try:
+            return self.firebaseApp.get('ml_service', '')
+        except Exception as e:
+            print(e)
+        return None
 
     def readConfig(self):
         
