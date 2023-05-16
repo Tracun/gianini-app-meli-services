@@ -35,14 +35,14 @@ class ML_services:
                 print(response.text)
                 
                 set_key(".env", 'TOKEN', response.json()['access_token'])
-                os.system(f"heroku config:set TOKEN = {response.json()['access_token']}")
+                os.system(f"heroku config:set TOKEN={response.json()['access_token']} --app ml-gianini-app-ser")
                 
                 set_key(".env", 'REFRESH_TOKEN', response.json()['refresh_token'])
-                os.system(f"heroku config:set REFRESH_TOKEN = {response.json()['refresh_token']}")
+                os.system(f"heroku config:set REFRESH_TOKEN={response.json()['refresh_token']} --app ml-gianini-app-ser")
                 
                 expires = str(datetime.now() + timedelta(seconds=float(response.json()['expires_in'])))
                 set_key(".env", 'EXPIRES', expires)
-                os.system(f"heroku config:set EXPIRES = {expires}")
+                os.system(f"heroku config:set EXPIRES={expires} --app ml-gianini-app-ser")
                 
                 load_dotenv()
                 print("Token renovado ...")
