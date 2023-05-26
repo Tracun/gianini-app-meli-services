@@ -47,6 +47,20 @@ class Services:
         self.amadeuPhone = os.getenv('AMADEUPHONE')
         self.amadeuToken = os.getenv('AMADEUTOKEN')
 
+    def readNotifiedOrders(self, order):
+        with open("./orders.data", 'r') as orders:
+            if order in orders.read():
+                print("Pedido já notificado ...")
+                return True
+        print("Novo Pedido, Notificando ...")
+        self.writeNotifiedOrders(order)
+        return False
+
+    def writeNotifiedOrders(self, order):
+        with open("./orders.data", '+a') as orders:
+            orders.write(f'{orders.read()}\n{order}')
+        return False
+
     def convertStr2Date(self, strDate):
         date_time_obj = datetime.datetime.strptime(
             strDate, '%Y-%m-%d %H:%M:%S.%f')

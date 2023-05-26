@@ -96,11 +96,14 @@ class ML_services:
             if topic == 'orders' or topic == 'orders_v2':
                 
                 canceled = data.json()['cancel_detail']
+                notified = Services().readNotifiedOrders(str(data.json()['id']))
                 
-                if canceled is None:
+                if canceled is None and not notified:
                     message = f"⚠️ *VENDA NO MERCADO LIVRE:* ⚠️\n*{data.json()['order_items'][0]['quantity']}* - *{data.json()['order_items'][0]['item']['title']}*"
-                else:
+                elif canceled is not None:
                     message = f"❌ *VENDA CANCELADA NO MERCADO LIVRE:* ❌\n*{data.json()['order_items'][0]['quantity']}* - *{data.json()['order_items'][0]['item']['title']}*\n*{canceled}*"
+                else:
+                    return 'Pedido já notificado, ignorando...'
                 print(message)
             elif topic == 'questions':
                 message = f"⚠️ *NOVA PERGUNTA NO MERCADO LIVRE:* ⚠️\n*{data.json()['text']}*"
@@ -112,10 +115,10 @@ class ML_services:
         except Exception as e:
             print(f"Erro ao obter notificação: {e}")
 
-if __name__ == "__main__":
-    try:
-        print(ML_services().encrypt('TG-64629267990d300001dc5c29-659453637'))
-        print(ML_services().decrypt('gAAAAABkY5kzvGF-09o5QUzSJTwRJpqao0-hICVWC0qNBChxcJAZpergptLaJ5qJWTkxxNQTOWk--XS0LHcXMVGbtZmzmJBK_MLLPliHUKHKKehABjUq3Q18Qr0QKhfjxiSizPjLDbhDLNnffU315UvDa1S4mHVQIr338r0X446luAbC4tWwTqM='))
-    except Exception as e:
-        print("Erro ao executar serviço: " + str(e))
+# if __name__ == "__main__":
+#     try:
+#         print(ML_services().encrypt('TG-64629267990d300001dc5c29-659453637'))
+#         print(ML_services().decrypt('gAAAAABkY5kzvGF-09o5QUzSJTwRJpqao0-hICVWC0qNBChxcJAZpergptLaJ5qJWTkxxNQTOWk--XS0LHcXMVGbtZmzmJBK_MLLPliHUKHKKehABjUq3Q18Qr0QKhfjxiSizPjLDbhDLNnffU315UvDa1S4mHVQIr338r0X446luAbC4tWwTqM='))
+#     except Exception as e:
+#         print("Erro ao executar serviço: " + str(e))
         
