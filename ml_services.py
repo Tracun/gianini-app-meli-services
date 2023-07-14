@@ -6,6 +6,7 @@ from dotenv import load_dotenv, set_key
 from cryptography.fernet import Fernet
 import base64
 import hashlib
+import pandas as pd
 
 class ML_services:
 
@@ -96,9 +97,20 @@ class ML_services:
             if topic == 'orders' or topic == 'orders_v2':
                 
                 canceled = data.json()['cancel_detail']
+                
+                dateCreated = pd.to_datetime(data.json()['date_created'])
+                lastUpdated = pd.to_datetime(data.json()['last_updated'])
+                
+                # Diff em minutos
+                diffDates = pd.Timedelta(lastUpdated - dateCreated).total_seconds() / 60
+                
                 notified = Services().readNotifiedOrders(str(data.json()['id']))
                 
-                if canceled is None and not notified:
+                # Não notifica caso a diferenca das datas de criação maior que 10 minutos
+                if diffDates > 10:
+                    print('Pedido já notificado, apenas uma alteração de status. ignorando...')
+                    return 'Pedido já notificado, apenas uma alteração de status. ignorando...'
+                elif canceled is None and not notified:
                     message = f"⚠️ *VENDA NO MERCADO LIVRE:* ⚠️\n*{data.json()['order_items'][0]['quantity']}* - *{data.json()['order_items'][0]['item']['title']}*"
                 elif canceled is not None:
                     message = f"❌ *VENDA CANCELADA NO MERCADO LIVRE:* ❌\n*{data.json()['order_items'][0]['quantity']}* - *{data.json()['order_items'][0]['item']['title']}*\n*{canceled}*"
@@ -111,7 +123,7 @@ class ML_services:
             else:
                 print(f"Tópico {topic} não mapeado para notificação")
                 return {"message":f"Tópico {topic} não mapeado para notificação"}, 200
-            return Services().sendMessage('dev', message)
+            return Services().sendMessage('all', message)
         except Exception as e:
             print(f"Erro ao obter notificação: {e}")
 
