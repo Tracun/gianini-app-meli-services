@@ -107,11 +107,12 @@ class ML_services:
                 notified = Services().readNotifiedOrders(str(data.json()['id']))
                 
                 # Não notifica caso a diferenca das datas de criação maior que 10 minutos
-                if diffDates > 10:
+                print(f'Diff {diffDates} minutes')
+                if canceled is None and not notified:
+                    message = f"⚠️ *VENDA NO MERCADO LIVRE:* ⚠️\n*{data.json()['order_items'][0]['quantity']}* - *{data.json()['order_items'][0]['item']['title']}*"
+                elif canceled is None and diffDates > 10:
                     print('Pedido já notificado, apenas uma alteração de status. ignorando...')
                     return 'Pedido já notificado, apenas uma alteração de status. ignorando...'
-                elif canceled is None and not notified:
-                    message = f"⚠️ *VENDA NO MERCADO LIVRE:* ⚠️\n*{data.json()['order_items'][0]['quantity']}* - *{data.json()['order_items'][0]['item']['title']}*"
                 elif canceled is not None:
                     message = f"❌ *VENDA CANCELADA NO MERCADO LIVRE:* ❌\n*{data.json()['order_items'][0]['quantity']}* - *{data.json()['order_items'][0]['item']['title']}*\n*{canceled}*"
                 else:
