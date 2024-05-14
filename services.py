@@ -61,6 +61,20 @@ class Services:
             orders.write(f'{orders.read()}\n{order}')
         return False
 
+    def readNotifiedQuestions(self, question):
+        with open("./questions.data", 'r') as questions:
+            if question in questions.read():
+                print("Pergunta já notificada ...")
+                return True
+        print("Nova Pergunta, Notificando ...")
+        self.writeNotifiedQuestions(order)
+        return False
+
+    def writeNotifiedQuestions(self, question):
+        with open("./questions.data", '+a') as questions:
+            questions.write(f'{questions.read()}\n{question}')
+        return False
+
     def convertStr2Date(self, strDate):
         date_time_obj = datetime.datetime.strptime(
             strDate, '%Y-%m-%d %H:%M:%S.%f')

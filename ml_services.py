@@ -86,7 +86,7 @@ class ML_services:
     def notify(self, topic, resource):
         
         token = self.refreshToken()
-        
+                
         headers = {
         'Authorization': f"Bearer {token}"
         }
@@ -119,19 +119,19 @@ class ML_services:
                     return 'Pedido já notificado, ignorando...'
                 print(message)
             elif topic == 'questions':
-                message = f"⚠️ *NOVA PERGUNTA NO MERCADO LIVRE:* ⚠️\n*{data.json()['text']}*"
-            
+                if data.json()['status'] == 'UNANSWERED':
+                    notified = False
+                    notified = Services().readNotifiedQuestions(str(data.json()['id']))
+                    
+                    if not notified:
+                        message = f"⚠️ *NOVA PERGUNTA NO MERCADO LIVRE:* ⚠️\n*{data.json()['text']}*"
+                    else:
+                        return 'Pergunta já notificada, ignorando...'
+                else:
+                    return 'Pergunta já notificada, ignorando...'
             else:
                 print(f"Tópico {topic} não mapeado para notificação")
                 return {"message":f"Tópico {topic} não mapeado para notificação"}, 200
             return Services().sendMessage('all', message)
         except Exception as e:
             print(f"Erro ao obter notificação: {e}")
-
-# if __name__ == "__main__":
-#     try:
-#         print(ML_services().encrypt('TG-64629267990d300001dc5c29-659453637'))
-#         print(ML_services().decrypt('gAAAAABkY5kzvGF-09o5QUzSJTwRJpqao0-hICVWC0qNBChxcJAZpergptLaJ5qJWTkxxNQTOWk--XS0LHcXMVGbtZmzmJBK_MLLPliHUKHKKehABjUq3Q18Qr0QKhfjxiSizPjLDbhDLNnffU315UvDa1S4mHVQIr338r0X446luAbC4tWwTqM='))
-#     except Exception as e:
-#         print("Erro ao executar serviço: " + str(e))
-        
