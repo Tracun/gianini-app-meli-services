@@ -67,7 +67,7 @@ class Services:
                 print("Pergunta já notificada ...")
                 return True
         print("Nova Pergunta, Notificando ...")
-        self.writeNotifiedQuestions(order)
+        self.writeNotifiedQuestions(question)
         return False
 
     def writeNotifiedQuestions(self, question):
