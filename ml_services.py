@@ -124,7 +124,8 @@ class ML_services:
                     notified = Services().readNotifiedQuestions(str(data.json()['id']))
                     
                     if not notified:
-                        message = f"⚠️ *NOVA PERGUNTA NO MERCADO LIVRE:* ⚠️\n*{data.json()['text']}*"
+                        product = getItem(self, data.json()['id'], headers)
+                        message = f"⚠️ *NOVA PERGUNTA NO MERCADO LIVRE - {product}: * ⚠️\n*{data.json()['text']}*"
                     else:
                         return 'Pergunta já notificada, ignorando...'
                 else:
@@ -135,3 +136,12 @@ class ML_services:
             return Services().sendMessage('all', message)
         except Exception as e:
             print(f"Erro ao obter notificação: {e}")
+
+
+    def getItem(self, id, headers):
+        try:
+            data = requests.get(self.meliEndpoint + f"/items/{id}", headers=headers)
+        
+            return data.json()['title']
+        except:
+            return "Não foi possível obter o produto"
