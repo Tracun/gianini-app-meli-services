@@ -124,8 +124,8 @@ class ML_services:
                     notified = Services().readNotifiedQuestions(str(data.json()['id']))
                     
                     if not notified:
-                        product = getItem(self, data.json()['id'], headers)
-                        message = f"⚠️ *NOVA PERGUNTA NO MERCADO LIVRE - {product}: * ⚠️\n*{data.json()['text']}*"
+                        product = self.getItem(data.json()['item_id'], headers)
+                        message = f"⚠️ *NOVA PERGUNTA NO MERCADO LIVRE - {product}:* ⚠️\n*{data.json()['text']}*"
                     else:
                         return 'Pergunta já notificada, ignorando...'
                 else:
