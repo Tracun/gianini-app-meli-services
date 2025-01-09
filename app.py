@@ -30,6 +30,10 @@ def notifying_running_task(**kwargs):
         json = kwargs.get('body', {})
         print("Starting notifying task")
         
+        print("##################################################################\n")
+        print(f"JSON = {json}")
+        print("##################################################################\n")
+        
         ML_services().notify(json['topic'], json['resource'])
 
 if __name__ == '__main__':

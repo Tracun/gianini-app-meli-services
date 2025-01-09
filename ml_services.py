@@ -130,10 +130,21 @@ class ML_services:
                         return 'Pergunta já notificada, ignorando...'
                 else:
                     return 'Pergunta já notificada, ignorando...'
+            elif topic == 'messages':
+                if data.json()['status'] == 'UNANSWERED':
+                    notified = False
+                    # notified = Services().readNotifiedQuestions(str(data.json()['id']))
+                    
+                    if not notified:
+                        message = f"⚠️ *NOVA MENSAGEM DENTRO EM UMA VENDA:* ⚠️\n*{data.json()['messages']['text']}*"
+                    else:
+                        return 'Pergunta já notificada, ignorando...'
+                else:
+                    return 'Pergunta já notificada, ignorando...'
             else:
                 print(f"Tópico {topic} não mapeado para notificação")
                 return {"message":f"Tópico {topic} não mapeado para notificação"}, 200
-            return Services().sendMessage('all', message)
+            return Services().sendMessage('dev', message)
         except Exception as e:
             print(f"Erro ao obter notificação: {e}")
 
