@@ -7,6 +7,7 @@ from cryptography.fernet import Fernet
 import base64
 import hashlib
 import pandas as pd
+import json
 
 class ML_services:
 
@@ -125,7 +126,7 @@ class ML_services:
                     
                     if not notified:
                         product = self.getItem(data.json()['item_id'], headers)
-                        message = f"⚠️ *NOVA PERGUNTA NO MERCADO LIVRE - {product}:* ⚠️\n*{data.json()['text']}*"
+                        message = f"⚠️ *{str(data.json()['id'])} - NOVA PERGUNTA NO MERCADO LIVRE - {product}:* ⚠️\n*{data.json()['text']}*"
                     else:
                         return 'Pergunta já notificada, ignorando...'
                 else:
@@ -148,7 +149,6 @@ class ML_services:
         except Exception as e:
             print(f"Erro ao obter notificação: {e}")
 
-
     def getItem(self, id, headers):
         try:
             data = requests.get(self.meliEndpoint + f"/items/{id}", headers=headers)
@@ -156,3 +156,51 @@ class ML_services:
             return data.json()['title']
         except:
             return "Não foi possível obter o produto"
+
+    def answerQuestion(self, questionId, answer):
+        try:
+            
+            token = self.refreshToken()
+                
+            headers = {
+            'Authorization': f"Bearer {token}"
+            }
+            
+            payload = json.dumps({
+                "question_id": questionId,
+                "text": answer
+            })
+                    
+            data = requests.post(self.meliEndpoint + "/answers", headers=headers, data=payload)
+            
+            return data.json()
+        except Exception as e:
+            return {"message":"Não foi possível responder a pergunta", "error":e}, 200
+
+    def getUnansweredQuestions(self, status):
+        try:
+            
+            if status == '':
+                status = 'UNANSWERED'
+            
+            token = self.refreshToken()
+                
+            headers = {
+            'Authorization': f"Bearer {token}"
+            }
+            
+            response = requests.get(self.meliEndpoint + "/my/received_questions/search", headers=headers)
+            
+            if response.status_code >=200 and response.status_code < 300:
+                questionsList = response.json()['questions']
+                unansweredQuestionsList = []
+                
+                for question in questionsList:
+                    if question['status'] == status.upper():
+                        unansweredQuestionsList.append(question)
+                    
+                return {"unansweredQuestionsList": unansweredQuestionsList}, 200
+            return {"unansweredQuestionsList":[]}, 200
+        except Exception as e:
+            print(f"ERRO: {e}")
+            return {"message":"Não foi possível responder a pergunta", "unansweredQuestionsList":[], "error":e}, 500

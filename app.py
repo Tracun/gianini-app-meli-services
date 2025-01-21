@@ -18,6 +18,20 @@ def index():
 def login():
     return "login"
 
+@app.route('/answer', methods=["POST"])
+def answer():
+    print(f"Respondendo questão, corpo da solicitacao = {request.json}")
+    
+    return ML_services().answerQuestion(request.json['question_id'], request.json['text'])
+    return {"message":"Respondendo ..."}, 200
+
+@app.route('/unanswered_questions', methods=["GET"])
+def unanswered_questions():
+    
+    print(f"Obtendo questoes {request.args.get('status')} ...")
+    
+    return ML_services().getUnansweredQuestions(request.args.get('status'))
+
 @app.route('/notifications', methods=["POST"])
 def notifications():
     thread = threading.Thread(target=notifying_running_task, kwargs={
