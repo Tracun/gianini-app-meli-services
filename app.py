@@ -1,7 +1,9 @@
 from flask_restful import Api
 from flask import Flask, render_template, request
 import threading
+import os
 from ml_services import ML_services
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 api = Api(app) 
@@ -20,10 +22,17 @@ def login():
 
 @app.route('/answer', methods=["POST"])
 def answer():
+    load_dotenv()
     print(f"Respondendo questão, corpo da solicitacao = {request.json}")
     
-    return ML_services().answerQuestion(request.json['question_id'], request.json['text'])
-    return {"message":"Respondendo ..."}, 200
+    # Check if header contain phone number, and verify if phone number is in env, to accept req
+    if("Phone-Number" not in request.headers):
+        return {"error":"missing header parameter"}, 400
+    else:
+        if(os.getenv("GIANINIPHONE") != request.headers['Phone-Number'] and os.getenv("DEVPHONE") != request.headers['Phone-Number']):
+            return {"error":"Unauthorized", "message":"whatsapp number not allowed"}, 401
+    
+    return ML_services().answerQuestion(request.json['question_id'], request.json['text']), 200
 
 @app.route('/unanswered_questions', methods=["GET"])
 def unanswered_questions():
