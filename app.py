@@ -27,10 +27,10 @@ def answer():
     
     # Check if header contain phone number, and verify if phone number is in env, to accept req
     if("Phone-Number" not in request.headers):
-        return {"error":"missing header parameter"}, 400
+        return {"error":"missing header parameter", "status":400}, 200
     else:
         if(os.getenv("GIANINIPHONE") != request.headers['Phone-Number'] and os.getenv("DEVPHONE") != request.headers['Phone-Number']):
-            return {"error":"Unauthorized", "message":"whatsapp number not allowed"}, 401
+            return {"error":"Unauthorized", "message":"whatsapp number not allowed", "status":401}, 200
     
     return ML_services().answerQuestion(request.json['question_id'], request.json['text']), 200
 
