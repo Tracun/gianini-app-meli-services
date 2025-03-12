@@ -111,22 +111,52 @@ class ML_services:
                 print(f'Diff {diffDates} minutes')
                 if canceled is None and not notified and diffDates < 15:
                     message = f"⚠️ *VENDA NO MERCADO LIVRE:* ⚠️\n*{data.json()['order_items'][0]['quantity']}* - *{data.json()['order_items'][0]['item']['title']}*"
+                    
+                    # Send request to botpress webhook
+                    data = json.dumps({
+                        "topic":"new_order",
+                        "id": data.json()['id'],
+                        "quantity":data.json()['order_items'][0]['quantity'],
+                        "title":data.json()['order_items'][0]['item']['title']
+                    })
+                    
+                    Services().callWebhookBotpress(data)
                 elif canceled is None and diffDates > 10:
                     print('Pedido já notificado, apenas uma alteração de status. ignorando...')
                     return 'Pedido já notificado, apenas uma alteração de status. ignorando...'
                 elif canceled is not None:
                     message = f"❌ *VENDA CANCELADA NO MERCADO LIVRE:* ❌\n*{data.json()['order_items'][0]['quantity']}* - *{data.json()['order_items'][0]['item']['title']}*\n*{canceled}*"
+                    
+                    # Send request to botpress webhook
+                    data = json.dumps({
+                        "topic":"order_canceled",
+                        "id": data.json()['id'],
+                        "quantity":data.json()['order_items'][0]['quantity'],
+                        "title":data.json()['order_items'][0]['item']['title']
+                    })
+                    
+                    Services().callWebhookBotpress(data)
                 else:
                     return 'Pedido já notificado, ignorando...'
                 print(message)
             elif topic == 'questions':
-                if data.json()['status'] == 'UNANSWERED':
+                if data.json()['status'] == 'ANSWERED':
                     notified = False
                     notified = Services().readNotifiedQuestions(str(data.json()['id']))
                     
                     if not notified:
                         product = self.getItem(data.json()['item_id'], headers)
                         message = f"⚠️ *{str(data.json()['id'])} - NOVA PERGUNTA NO MERCADO LIVRE - {product}:* ⚠️\n*{data.json()['text']}*"
+                        
+                        # Send request to botpress webhook
+                        data = json.dumps({
+                            "topic":"question",
+                            "id": data.json()['id'],
+                            "title":product,
+                            "question":data.json()['text']
+                        })
+                        
+                        Services().callWebhookBotpress(data)
                     else:
                         return 'Pergunta já notificada, ignorando...'
                 else:

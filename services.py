@@ -12,6 +12,7 @@ class Services:
         self.firebaseApp = firebase.FirebaseApplication(
             'https://gianini-manutencao.firebaseio.com/', None)
         self.whatsappURL = "https://api.callmebot.com/whatsapp.php?"
+        self.botpressWebhook = "https://webhook.botpress.cloud/e7c8cf69-de6d-48ce-b445-9a9fea2313ca"
         self.gianiniPhone = ""
         self.gianiniToken = ""
         self.devPhone = ""
@@ -46,6 +47,8 @@ class Services:
 
         self.amadeuPhone = os.getenv('AMADEUPHONE')
         self.amadeuToken = os.getenv('AMADEUTOKEN')
+        
+        self.secret = os.getenv('SECRET_WEBHOOK')
 
     def readNotifiedOrders(self, order):
         with open("./orders.data", 'r') as orders:
@@ -100,6 +103,23 @@ class Services:
         self.log(endpoint)
 
         res = requests.get(url=endpoint)
+
+        if res.status_code != 200:
+            self.sendErrorMessage("Erro ao enviar Whatsapp: " + res.text)
+
+        self.log(res.text)
+        return res
+
+    # Using webhook from botpress, a free tool
+    def callWebhookBotpress(self, data):
+        endpoint = self.botpressWebhook
+        self.log(endpoint)
+        headers = {
+            'x-bp-secret':self.secret
+        }
+        
+        print(data)
+        res = requests.post(url=endpoint, data=data, headers=headers)
 
         if res.status_code != 200:
             self.sendErrorMessage("Erro ao enviar Whatsapp: " + res.text)
