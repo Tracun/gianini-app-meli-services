@@ -21,12 +21,6 @@ def index():
 def login():
     return "login"
 
-@app.route('/testWriteOrder', methods=["GET"])
-def testWriteOrder():
-    Services().writeNotifiedOrders(f"123456789")
-    
-    return {"status":"OK"}
-
 @app.route('/answer', methods=["POST"])
 def answer():
     load_dotenv()

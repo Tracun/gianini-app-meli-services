@@ -8,6 +8,7 @@ import base64
 import hashlib
 import pandas as pd
 import json
+from db import DB
 
 class ML_services:
 
@@ -149,7 +150,7 @@ class ML_services:
                     
                     if not notified:
                         product = self.getItem(data.json()['item_id'], headers)
-                        message = f"⚠️ *{str(data.json()['id'])} - NOVA PERGUNTA NO MERCADO LIVRE - {product}:* ⚠️\n*{treatData(data.json()['text'])}*"
+                        message = f"⚠️ *{str(data.json()['id'])} - NOVA PERGUNTA NO MERCADO LIVRE - {product}:* ⚠️\n*{self.treatData(data.json()['text'])}*"
                         
                         # Send request to botpress webhook
                         data = json.dumps({
@@ -170,7 +171,7 @@ class ML_services:
                     # notified = Services().readNotifiedQuestions(str(data.json()['id']))
                     
                     if not notified:
-                        message = f"⚠️ *NOVA MENSAGEM DENTRO EM UMA VENDA:* ⚠️\n*{treatData(data.json()['messages']['text'])}*"
+                        message = f"⚠️ *NOVA MENSAGEM DENTRO EM UMA VENDA:* ⚠️\n*{self.treatData(data.json()['messages']['text'])}*"
                     else:
                         return 'Pergunta já notificada, ignorando...'
                 else:
