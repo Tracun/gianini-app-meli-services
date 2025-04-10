@@ -31,6 +31,9 @@ class ML_services:
         fernet = Fernet(key)        
         return fernet.decrypt(data.encode('utf-8')).decode("utf-8")
 
+    def treatData(self, data):
+        return data.replace('"', '')
+    
     def refreshToken(self):
         load_dotenv()
         try:
@@ -146,7 +149,7 @@ class ML_services:
                     
                     if not notified:
                         product = self.getItem(data.json()['item_id'], headers)
-                        message = f"⚠️ *{str(data.json()['id'])} - NOVA PERGUNTA NO MERCADO LIVRE - {product}:* ⚠️\n*{data.json()['text']}*"
+                        message = f"⚠️ *{str(data.json()['id'])} - NOVA PERGUNTA NO MERCADO LIVRE - {product}:* ⚠️\n*{treatData(data.json()['text'])}*"
                         
                         # Send request to botpress webhook
                         data = json.dumps({
@@ -167,7 +170,7 @@ class ML_services:
                     # notified = Services().readNotifiedQuestions(str(data.json()['id']))
                     
                     if not notified:
-                        message = f"⚠️ *NOVA MENSAGEM DENTRO EM UMA VENDA:* ⚠️\n*{data.json()['messages']['text']}*"
+                        message = f"⚠️ *NOVA MENSAGEM DENTRO EM UMA VENDA:* ⚠️\n*{treatData(data.json()['messages']['text'])}*"
                     else:
                         return 'Pergunta já notificada, ignorando...'
                 else:

@@ -3,6 +3,7 @@ from flask import Flask, render_template, request
 import threading
 import os
 from ml_services import ML_services
+from services import Services
 from dotenv import load_dotenv
 
 app = Flask(__name__)
@@ -19,6 +20,12 @@ def index():
 @app.route('/login', methods=["GET", "POST"])
 def login():
     return "login"
+
+@app.route('/testWriteOrder', methods=["GET"])
+def testWriteOrder():
+    Services().writeNotifiedOrders(f"123456789")
+    
+    return {"status":"OK"}
 
 @app.route('/answer', methods=["POST"])
 def answer():

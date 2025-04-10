@@ -60,8 +60,11 @@ class Services:
         return False
 
     def writeNotifiedOrders(self, order):
-        with open("./orders.data", '+a') as orders:
-            orders.write(f'{orders.read()}\n{order}')
+        try:
+            with open("./orderss.data", '+a') as orders:
+                orders.write(f'{orders.read()}\n{order}')
+        except e as Exception:
+            print(f"Erro ao salvar pedido notificado: {e}")
         return False
 
     def readNotifiedQuestions(self, question):
@@ -74,8 +77,11 @@ class Services:
         return False
 
     def writeNotifiedQuestions(self, question):
-        with open("./questions.data", '+a') as questions:
-            questions.write(f'{questions.read()}\n{question}')
+        try:
+            with open("./questions.data", '+a') as questions:
+                questions.write(f'{questions.read()}\n{question}')
+        except e as Exception:
+            print(f"Erro ao salvar questão notificada: {e}")
         return False
 
     def convertStr2Date(self, strDate):
