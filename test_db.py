@@ -4,20 +4,15 @@ class Test:
     
     def test_insert_order(self):
         db = DB()
-        assert db.insert_notified('12345', 'orders') == True
+        assert db.insert_notified('12345') == True
     
     def test_insert_question(self):
         db = DB()
-        assert db.insert_notified('12345', 'questions') == True
+        assert db.insert_notified('54321') == True
         
     def test_orderExists(self):
         db = DB()
-        assert db.isNotified('12345', 'orders') == True
+        assert db.isNotified('12345') == True
         db = DB()
-        assert db.isNotified('123456', 'orders') == False
+        assert db.isNotified('123456') == False
     
-    def test_questionExists(self):
-        db = DB()
-        assert db.isNotified('12345', 'questions') == True
-        db = DB()
-        assert db.isNotified('123456', 'questions') == False

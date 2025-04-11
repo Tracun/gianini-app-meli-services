@@ -45,15 +45,8 @@ class DB:
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)
         
-    def insert_notified(self, id, table='orders'):
+    def insert_notified(self, id, table='notified_itens'):
         try:
-            if(table == 'orders'):
-                table = 'notified_orders'
-            elif(table == 'questions'):
-                table = 'notified_questions'
-            else:
-                print(f'tabela inválida')
-                return False
             
             affected_count = self.cur.execute(f"INSERT INTO {table} (id) VALUES ({id})")
 
@@ -66,15 +59,8 @@ class DB:
             self.disconnect()
             
         
-    def isNotified(self, id, table='orders'):
+    def isNotified(self, id, table='notified_itens'):
         try:
-            if(table == 'orders'):
-                table = 'notified_orders'
-            elif(table == 'questions'):
-                table = 'notified_questions'
-            else:
-                print(f'tabela inválida')
-                return False
                         
             self.cur.execute(f"SELECT id FROM {table} WHERE id={id}")
             print(f'cur == {self.cur}')
