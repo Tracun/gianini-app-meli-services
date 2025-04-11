@@ -82,9 +82,6 @@ class ML_services:
             
             print("Token na validade ...")
             return self.decrypt(data['token'])
-            # original_time = datetime.datetime(2020, 2, 19, 12, 0, 0)
-            # print("Given Datetime: ", original_time)
-            # time_change = datetime.timedelta(days=1, hours=10, minutes=40)
         except Exception as e:
             print(f"Erro ao obter/renovar token: {e}")
         
@@ -109,11 +106,15 @@ class ML_services:
                 # Diff em minutos
                 diffDates = pd.Timedelta(lastUpdated - dateClosed).total_seconds() / 60
                 
-                notified = Services().readNotifiedOrders(str(data.json()['id']))
+                notified = DB().isNotified(str(data.json()['id']))
+                print(f"Order already notified? = {notified}")
+                
+                if(not notified):
+                    DB().insert_notified(str(data.json()['id']))
                 
                 # Não notifica caso a diferenca da data closed e lastUpdate maior que 15 minutos
                 print(f'Diff {diffDates} minutes')
-                if canceled is None and not notified and diffDates < 15:
+                if canceled is None and not notified: # and diffDates < 15:
                     message = f"⚠️ *VENDA NO MERCADO LIVRE:* ⚠️\n*{data.json()['order_items'][0]['quantity']}* - *{data.json()['order_items'][0]['item']['title']}*"
                     
                     # Send request to botpress webhook
@@ -144,9 +145,13 @@ class ML_services:
                     return 'Pedido já notificado, ignorando...'
                 print(message)
             elif topic == 'questions':
-                if data.json()['status'] == 'ANSWERED':
+                if data.json()['status'] == 'UNANSWERED':
                     notified = False
-                    notified = Services().readNotifiedQuestions(str(data.json()['id']))
+                    notified = DB().isNotified(str(data.json()['id']))
+                    print(f"Question already notified? = {notified}")
+                    
+                    if(not notified):
+                        DB().insert_notified(str(data.json()['id']))
                     
                     if not notified:
                         product = self.getItem(data.json()['item_id'], headers)
@@ -168,7 +173,11 @@ class ML_services:
             elif topic == 'messages':
                 if data.json()['status'] == 'UNANSWERED':
                     notified = False
-                    # notified = Services().readNotifiedQuestions(str(data.json()['id']))
+                    notified = DB().isNotified(str(data.json()['id']))
+                    print(f"Messages already notified? = {notified}")
+                    
+                    if(not notified):
+                        DB().insert_notified(str(data.json()['id']))
                     
                     if not notified:
                         message = f"⚠️ *NOVA MENSAGEM DENTRO EM UMA VENDA:* ⚠️\n*{self.treatData(data.json()['messages']['text'])}*"
