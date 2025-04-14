@@ -1,6 +1,6 @@
 import requests
 from services import Services
-import os
+import sys, os
 from datetime import datetime, timedelta
 from dotenv import load_dotenv, set_key
 from cryptography.fernet import Fernet
@@ -83,7 +83,8 @@ class ML_services:
             print("Token na validade ...")
             return self.decrypt(data['token'])
         except Exception as e:
-            print(f"Erro ao obter/renovar token: {e}")
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            print(f"Erro ao obter/renovar token: {e} - {exc_tb.tb_lineno}")
         
     def notify(self, topic, resource):
         
@@ -106,11 +107,11 @@ class ML_services:
                 # Diff em minutos
                 diffDates = pd.Timedelta(lastUpdated - dateClosed).total_seconds() / 60
                 
-                notified = DB().isNotified(str(data.json()['id']))
+                notified = DB().isNotified(data.json()['id'])
                 print(f"Order already notified? = {notified}")
                 
                 if(not notified):
-                    DB().insert_notified(str(data.json()['id']))
+                    DB().insert_notified(data.json()['id'])
                 
                 # Não notifica caso a diferenca da data closed e lastUpdate maior que 15 minutos
                 print(f'Diff {diffDates} minutes')
@@ -188,9 +189,10 @@ class ML_services:
             else:
                 print(f"Tópico {topic} não mapeado para notificação")
                 return {"message":f"Tópico {topic} não mapeado para notificação"}, 200
-            return Services().sendMessage('all', message)
+            return Services().sendMessage('dev', message)
         except Exception as e:
-            print(f"Erro ao obter notificação: {e}")
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            print(f"Erro ao obter notificação: {e} - {exc_tb.tb_lineno}")
 
     def getItem(self, id, headers):
         try:
@@ -218,6 +220,7 @@ class ML_services:
             
             return data.json()
         except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
             return {"message":"Não foi possível responder a pergunta", "error":e}, 200
 
     def getUnansweredQuestions(self, status):
@@ -245,5 +248,6 @@ class ML_services:
                 return {"unansweredQuestionsList": unansweredQuestionsList}, 200
             return {"unansweredQuestionsList":[]}, 200
         except Exception as e:
-            print(f"ERRO: {e}")
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            print(f"ERRO: {e} - {exc_tb.tb_lineno}")
             return {"message":"Não foi possível responder a pergunta", "unansweredQuestionsList":[], "error":e}, 500

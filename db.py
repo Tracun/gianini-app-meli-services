@@ -67,12 +67,15 @@ class DB:
             
             for (data) in self.cur:
                 
-                if(id == data[0]):
+                print(f"{id} == {data[0]}")
+                if(str(id) == str(data[0])):
                     return True
             
             return False            
         except mariadb.Error as e:
-            print(f"Error connecting to MariaDB Platform: {e}")
+            
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            print(f"Error connecting to MariaDB Platform: {e} - {exc_tb.tb_lineno}")
             sys.exit(1)
         finally:
             self.disconnect()

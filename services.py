@@ -131,6 +131,7 @@ class Services:
             self.sendErrorMessage("Erro ao enviar Whatsapp: " + res.text)
 
         self.log(res.text)
+        print(f"response webhook = {res.text}")
         return res
 
     def log(self, message):

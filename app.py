@@ -55,7 +55,7 @@ def notifying_running_task(**kwargs):
         print("Starting notifying task")
         
         print("##################################################################\n")
-        print(f"JSON = {json}")
+        print(f"notifying_running_task JSON = {json}")
         print("##################################################################\n")
         
         ML_services().notify(json['topic'], json['resource'])
