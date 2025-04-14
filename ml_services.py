@@ -189,7 +189,7 @@ class ML_services:
             else:
                 print(f"Tópico {topic} não mapeado para notificação")
                 return {"message":f"Tópico {topic} não mapeado para notificação"}, 200
-            return Services().sendMessage('dev', message)
+            return Services().sendMessage('all', message)
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             print(f"Erro ao obter notificação: {e} - {exc_tb.tb_lineno}")
