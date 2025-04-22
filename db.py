@@ -13,13 +13,16 @@ class DB:
     
     def readConfig(self):
         
-        self.DATABASE_URL = os.getenv('DATABASE_URL')
-        
-        self.DB_USERNAME = os.getenv('DB_USERNAME')
-        self.DB_PASSWORD = os.getenv('DB_PASSWORD')
-        
-        self.DB_PORT = os.getenv('DB_PORT')
-        self.DB_DATABASE = os.getenv('DB_DATABASE')
+        try:
+            self.DATABASE_URL = os.getenv('DATABASE_URL')
+            
+            self.DB_USERNAME = os.getenv('DB_USERNAME')
+            self.DB_PASSWORD = os.getenv('DB_PASSWORD')
+            
+            self.DB_PORT = os.getenv('DB_PORT')
+            self.DB_DATABASE = os.getenv('DB_DATABASE')
+        except Exception as e:
+            print(f"Erro ao ler configurações do DB: {e}")
 
     def disconnect(self):
         try:
