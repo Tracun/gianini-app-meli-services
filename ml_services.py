@@ -110,7 +110,6 @@ class ML_services:
                 # Diff em minutos
                 diffDates = pd.Timedelta(lastUpdated - dateClosed).total_seconds() / 60
                 
-                print("VOU VERIFICAR SE ID JA FOI NOTIFICADO")
                 notified = DB().isNotified(id)
                 print(f"Order already notified? = {notified}")
                 

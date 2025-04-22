@@ -61,8 +61,6 @@ class DB:
         
     def isNotified(self, id, table='notified_itens'):
         try:
-            
-            print("NA FUNCAO DE ISNOTIFIED = ID = {id}")
             if id == None:
                 return False
             
