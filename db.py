@@ -61,7 +61,9 @@ class DB:
         
     def isNotified(self, id, table='notified_itens'):
         try:
-                        
+            if id == None:
+                return False
+            
             self.cur.execute(f"SELECT id FROM {table} WHERE id={id}")
             print(f'cur == {self.cur}')
             
@@ -72,7 +74,7 @@ class DB:
                     return True
             
             return False            
-        except mariadb.Error as e:
+        except Exception as e:
             
             exc_type, exc_obj, exc_tb = sys.exc_info()
             print(f"Error connecting to MariaDB Platform: {e} - {exc_tb.tb_lineno}")

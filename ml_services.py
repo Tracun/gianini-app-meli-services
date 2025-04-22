@@ -96,6 +96,7 @@ class ML_services:
         try:
             data = requests.get(self.meliEndpoint + resource, headers=headers)
             print(f"data = {data.json()}")
+            print(f"ID = {data.json()['id']}")
             
             if topic == 'orders' or topic == 'orders_v2':
                 
