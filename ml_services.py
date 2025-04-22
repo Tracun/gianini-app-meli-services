@@ -95,8 +95,10 @@ class ML_services:
         }
         try:
             data = requests.get(self.meliEndpoint + resource, headers=headers)
+            id = str(data.json()['id'])
+            
             print(f"data = {data.json()}")
-            print(f"ID = {data.json()['id']}")
+            print(f"ID = {id}")
             
             if topic == 'orders' or topic == 'orders_v2':
                 
@@ -108,11 +110,12 @@ class ML_services:
                 # Diff em minutos
                 diffDates = pd.Timedelta(lastUpdated - dateClosed).total_seconds() / 60
                 
-                notified = DB().isNotified(data.json()['id'])
+                print("VOU VERIFICAR SE ID JA FOI NOTIFICADO")
+                notified = DB().isNotified(id)
                 print(f"Order already notified? = {notified}")
                 
                 if(not notified):
-                    DB().insert_notified(data.json()['id'])
+                    DB().insert_notified(id)
                 
                 # Não notifica caso a diferenca da data closed e lastUpdate maior que 15 minutos
                 print(f'Diff {diffDates} minutes')
@@ -122,7 +125,7 @@ class ML_services:
                     # Send request to botpress webhook
                     data = json.dumps({
                         "topic":"new_order",
-                        "id": data.json()['id'],
+                        "id": id,
                         "quantity":data.json()['order_items'][0]['quantity'],
                         "title":data.json()['order_items'][0]['item']['title']
                     })
@@ -137,7 +140,7 @@ class ML_services:
                     # Send request to botpress webhook
                     data = json.dumps({
                         "topic":"order_canceled",
-                        "id": data.json()['id'],
+                        "id": id,
                         "quantity":data.json()['order_items'][0]['quantity'],
                         "title":data.json()['order_items'][0]['item']['title']
                     })
@@ -149,20 +152,20 @@ class ML_services:
             elif topic == 'questions':
                 if data.json()['status'] == 'UNANSWERED':
                     notified = False
-                    notified = DB().isNotified(str(data.json()['id']))
+                    notified = DB().isNotified(id)
                     print(f"Question already notified? = {notified}")
                     
                     if(not notified):
-                        DB().insert_notified(str(data.json()['id']))
+                        DB().insert_notified(id)
                     
                     if not notified:
                         product = self.getItem(data.json()['item_id'], headers)
-                        message = f"⚠️ *{str(data.json()['id'])} - NOVA PERGUNTA NO MERCADO LIVRE - {product}:* ⚠️\n*{self.treatData(data.json()['text'])}*"
+                        message = f"⚠️ *{id} - NOVA PERGUNTA NO MERCADO LIVRE - {product}:* ⚠️\n*{self.treatData(data.json()['text'])}*"
                         
                         # Send request to botpress webhook
                         data = json.dumps({
                             "topic":"question",
-                            "id": data.json()['id'],
+                            "id": id,
                             "title":product,
                             "question":data.json()['text']
                         })
@@ -175,11 +178,11 @@ class ML_services:
             elif topic == 'messages':
                 if data.json()['status'] == 'UNANSWERED':
                     notified = False
-                    notified = DB().isNotified(str(data.json()['id']))
+                    notified = DB().isNotified(id)
                     print(f"Messages already notified? = {notified}")
                     
                     if(not notified):
-                        DB().insert_notified(str(data.json()['id']))
+                        DB().insert_notified(id)
                     
                     if not notified:
                         message = f"⚠️ *NOVA MENSAGEM DENTRO EM UMA VENDA:* ⚠️\n*{self.treatData(data.json()['messages']['text'])}*"
