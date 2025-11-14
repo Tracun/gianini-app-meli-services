@@ -17,7 +17,9 @@ class Services:
         self.gianiniToken = ""
         self.devPhone = ""
         self.devToken = ""
-        self.version = "v1.0.2"
+        self.franciscoPhone = ""
+        self.franciscoToken = ""
+        self.version = "v1.0.3"
         self.readConfig()
         
     def setToken(self, data):
@@ -41,6 +43,9 @@ class Services:
 
         self.devPhone = os.getenv('DEVPHONE')
         self.devToken = os.getenv('DEVTOKEN')
+
+        self.franciscoPhone = os.getenv('FRANCISCOPHONE')
+        self.franciscoToken = os.getenv('FRANCISCOTOKEN')
 
         self.vitorPhone = os.getenv('VITORPHONE')
         self.vitorToken = os.getenv('VITORTOKEN')
@@ -97,7 +102,8 @@ class Services:
             return self.sendWhatsappMessage(message, self.devPhone, self.devToken)
         elif to == "all":
             self.sendWhatsappMessage(message, self.devPhone, self.devToken)
-            return self.sendWhatsappMessage(message, self.gianiniPhone, self.gianiniToken)
+            self.sendWhatsappMessage(message, self.gianiniPhone, self.gianiniToken)
+            return self.sendWhatsappMessage(message, self.franciscoPhone, self.franciscoToken)
         elif to == "gianini":
             return self.sendWhatsappMessage(message, self.gianiniPhone, self.gianiniToken)
         return None
