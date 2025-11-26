@@ -109,7 +109,7 @@ class Services:
         return None
 
     # Using CallMeBot, a free tool
-    def sendWhatsappMessage(self, message, phone, apiKey):
+    def sendWhatsappMessage(self, message, phone, apiKey, isFromErrorMessage=False):
         endpoint = self.whatsappURL + \
             "phone={0}&text={1}&apikey={2}".format(phone, message, apiKey)
         self.log(endpoint)
@@ -117,7 +117,7 @@ class Services:
         res = requests.get(url=endpoint)
 
         if res.status_code != 200:
-            self.sendErrorMessage("Erro ao enviar Whatsapp: " + res.text)
+            self.sendErrorMessage("Erro ao enviar Whatsapp: " + res.text, isFromErrorMessage=isFromErrorMessage)
 
         self.log(res.text)
         return res
@@ -143,6 +143,8 @@ class Services:
     def log(self, message):
         print("{0} - {1}".format(datetime.datetime.now(), message))
 
-    def sendErrorMessage(self, message):
-        self.sendWhatsappMessage(
-            "{0} - {1}".format(datetime.datetime.now(), message), self.devPhone, self.devToken)
+    def sendErrorMessage(self, message, isFromErrorMessage=False):
+        if not isFromErrorMessage:
+            self.sendWhatsappMessage(
+                "{0} - {1}".format(datetime.datetime.now(), message), self.devPhone, self.devToken, isFromErrorMessage=True)
+
