@@ -283,11 +283,6 @@ class App_Services:
     def log(self, message):
         print("{0} - {1}".format(datetime.datetime.now(), message))
 
-    def sendErrorMessage(self, message):
-        print(f"SENDING WHATSAPP ERROR {message}")
-        self.sendWhatsappMessage(
-            "{0} - {1}".format(datetime.datetime.now(), message), self.devPhone, self.devToken)
-
 
 def main():
     app_services = App_Services()
