@@ -27,11 +27,14 @@ def checkeExpenses(to=None):
     app_services = App_Services()
 
     res = app_services.checkExpensesCloseToDueDate(to)
+    print(f"checkExpensesCloseToDueDate res = {res}")
     
     if res != None and res.status_code == 200:
         return {'message': 'Em breve receberá um whatsapp com as informações requeridas', 'response': {}, 'status code':'{0}'.format(res.status_code)}
     elif res == None:
         return {'message': 'Endpoint inválido, era esperado um dos abaixos: /all ou /dev ou /gianini', 'response': {}, 'status code':'{0}'.format('400')}
+
+    return {'message':'undefined'}
 
 @app.route('/verifPreventivasProxVenc')
 @app.route('/verifPreventivasProxVenc/<string:to>')
@@ -39,11 +42,14 @@ def checkePreventivasSchedule(to=None):
     app_services = App_Services()
 
     res = app_services.checkPreventivaScheduleCloseToDueDate(to)
+    print(f"checkPreventivaScheduleCloseToDueDate res = {res}")
     
     if res != None and res.status_code == 200:
         return {'message': 'Em breve receberá um whatsapp com as informações requeridas', 'response': {}, 'status code':'{0}'.format(res.status_code)}
     elif res == None:
         return {'message': 'Endpoint inválido, era esperado um dos abaixos: /all ou /dev ou /gianini', 'response': {}, 'status code':'{0}'.format('400')}
+
+    return {'message':'undefined'}
 
 @app.route('/answer', methods=["POST"])
 def answer():
