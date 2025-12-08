@@ -67,24 +67,6 @@ class App_Services:
         self.log(res.text)
         return res
 
-    # Using webhook from botpress, a free tool
-    def callWebhookBotpress(self, data):
-        endpoint = self.botpressWebhook
-        self.log(endpoint)
-        headers = {
-            'x-bp-secret':self.secret
-        }
-        
-        print(data)
-        res = requests.post(url=endpoint, data=data, headers=headers)
-
-        if res.status_code != 200:
-            self.sendErrorMessage("Erro ao enviar Whatsapp: " + res.text)
-
-        self.log(res.text)
-        print(f"response webhook = {res.text}")
-        return res
-
     def log(self, message):
         print("{0} - {1}".format(datetime.datetime.now(), message))
 
@@ -93,7 +75,6 @@ class App_Services:
         if not isFromErrorMessage:
             self.sendWhatsappMessage(
                 "{0} - {1}".format(datetime.datetime.now(), message), self.devPhone, self.devToken, isFromErrorMessage=True)
-
 
     def getAllSchedules(self):
         try:
@@ -247,20 +228,6 @@ class App_Services:
 
     def sendSMS(self):
         print("TO BE DEF")
-
-    # Using CallMeBot, a free tool
-    def sendWhatsappMessage(self, message, phone, apiKey):
-        endpoint = self.whatsappURL + \
-            "phone={0}&text={1}&apikey={2}".format(phone, message, apiKey)
-        self.log(endpoint)
-
-        res = requests.get(url=endpoint)
-
-        if res.status_code != 200:
-            self.sendErrorMessage("Erro ao enviar Whatsapp: " + res.text)
-
-        self.log(res.text)
-        return res
 
     # Using WWEBJS from my server
     def sendWhatsappMessageMyApi(self, message, phone):
