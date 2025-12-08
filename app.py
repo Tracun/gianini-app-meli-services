@@ -3,7 +3,7 @@ from flask import Flask, render_template, request
 import threading
 import os
 from ml_services import ML_services
-from services import Services
+from app_services import App_Services
 from dotenv import load_dotenv
 
 app = Flask(__name__)
@@ -20,6 +20,30 @@ def index():
 @app.route('/login', methods=["GET", "POST"])
 def login():
     return "login"
+
+@app.route('/verifDespesasProxVenc', methods=["GET", "POST"])
+@app.route('/verifDespesasProxVenc/<string:to>', methods=["GET", "POST"])
+def checkeExpenses(to=None):
+    app_services = App_Services()
+
+    res = app_services.checkExpensesCloseToDueDate(to)
+    
+    if res != None and res.status_code == 200:
+        return {'message': 'Em breve receberá um whatsapp com as informações requeridas', 'response': {}, 'status code':'{0}'.format(res.status_code)}
+    elif res == None:
+        return {'message': 'Endpoint inválido, era esperado um dos abaixos: /all ou /dev ou /gianini', 'response': {}, 'status code':'{0}'.format('400')}
+
+@app.route('/verifPreventivasProxVenc')
+@app.route('/verifPreventivasProxVenc/<string:to>')
+def checkePreventivasSchedule(to=None):
+    app_services = App_Services()
+
+    res = app_services.checkPreventivaScheduleCloseToDueDate(to)
+    
+    if res != None and res.status_code == 200:
+        return {'message': 'Em breve receberá um whatsapp com as informações requeridas', 'response': {}, 'status code':'{0}'.format(res.status_code)}
+    elif res == None:
+        return {'message': 'Endpoint inválido, era esperado um dos abaixos: /all ou /dev ou /gianini', 'response': {}, 'status code':'{0}'.format('400')}
 
 @app.route('/answer', methods=["POST"])
 def answer():
