@@ -31,10 +31,12 @@ def checkeExpenses(to=None):
     
     if res != None and res.status_code == 200:
         return {'message': 'Em breve receberá um whatsapp com as informações requeridas', 'response': {}, 'status code':'{0}'.format(res.status_code)}
+    elif res != None and res.status_code > 200:
+        return {'message': 'Ocorreu um erro', 'response': res.json(), 'status code':'{0}'.format(res.status_code)}
     elif res == None:
         return {'message': 'Endpoint inválido, era esperado um dos abaixos: /all ou /dev ou /gianini', 'response': {}, 'status code':'{0}'.format('400')}
 
-    return {'message':'undefined'}
+    return {'message':'Internal error', 'status code':500}
 
 @app.route('/verifPreventivasProxVenc')
 @app.route('/verifPreventivasProxVenc/<string:to>')
@@ -46,10 +48,12 @@ def checkePreventivasSchedule(to=None):
     
     if res != None and res.status_code == 200:
         return {'message': 'Em breve receberá um whatsapp com as informações requeridas', 'response': {}, 'status code':'{0}'.format(res.status_code)}
+    elif res != None and res.status_code > 200:
+        return {'message': 'Ocorreu um erro', 'response': res.json(), 'status code':'{0}'.format(res.status_code)}
     elif res == None:
         return {'message': 'Endpoint inválido, era esperado um dos abaixos: /all ou /dev ou /gianini', 'response': {}, 'status code':'{0}'.format('400')}
 
-    return {'message':'undefined'}
+    return {'message':'Internal error', 'status code':500}
 
 @app.route('/answer', methods=["POST"])
 def answer():
