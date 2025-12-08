@@ -129,7 +129,7 @@ class ML_services:
                         "title":data.json()['order_items'][0]['item']['title']
                     })
                     
-                    Services().callWebhookBotpress(data)
+                    # Services().callWebhookBotpress(data)
                 elif canceled is None and diffDates > 10:
                     print('Pedido já notificado, apenas uma alteração de status. ignorando...')
                     return 'Pedido já notificado, apenas uma alteração de status. ignorando...'
@@ -144,7 +144,7 @@ class ML_services:
                         "title":data.json()['order_items'][0]['item']['title']
                     })
                     
-                    Services().callWebhookBotpress(data)
+                    # Services().callWebhookBotpress(data)
                 else:
                     return 'Pedido já notificado, ignorando...'
                 print(message)
@@ -169,7 +169,7 @@ class ML_services:
                             "question":data.json()['text']
                         })
                         
-                        Services().callWebhookBotpress(data)
+                        # Services().callWebhookBotpress(data)
                     else:
                         return 'Pergunta já notificada, ignorando...'
                 else:
@@ -192,7 +192,7 @@ class ML_services:
             else:
                 print(f"Tópico {topic} não mapeado para notificação")
                 return {"message":f"Tópico {topic} não mapeado para notificação"}, 200
-            return Services().sendMessage('all', message)
+            return Services().sendMessage(message)
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             print(f"Erro ao obter notificação: {e} - {exc_tb.tb_lineno}")

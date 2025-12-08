@@ -56,6 +56,8 @@ class Services:
         
         self.secret = os.getenv('SECRET_WEBHOOK')
         self.secret = os.getenv('MY_API_TOKEN')
+        
+        self.to = os.getenv('TO')
 
     def readNotifiedOrders(self, order):
         with open("./orders.data", 'r') as orders:
@@ -95,18 +97,15 @@ class Services:
         date_time_obj = datetime.datetime.strptime(
             strDate, '%Y-%m-%d %H:%M:%S.%f')
         return date_time_obj
-
-    def sendSMS(self):
-        print("TO BE DEF")
         
-    def sendMessage(self, to, message):
-        if to == None or to == 'dev':
+    def sendMessage(self, message):
+        if self.to == None or self.to == 'dev':
             return self.sendWhatsappMessage(message, self.devPhone, self.devToken)
-        elif to == "all":
+        elif self.to == "all":
             self.sendWhatsappMessage(message, self.devPhone, self.devToken)
             self.sendWhatsappMessage(message, self.gianiniPhone, self.gianiniToken)
             return self.sendWhatsappMessage(message, self.franciscoPhone, self.franciscoToken)
-        elif to == "gianini":
+        elif self.to == "gianini":
             return self.sendWhatsappMessage(message, self.gianiniPhone, self.gianiniToken)
         return None
 
@@ -122,24 +121,6 @@ class Services:
             self.sendErrorMessage("Erro ao enviar Whatsapp: " + res.text, isFromErrorMessage=isFromErrorMessage)
 
         self.log(res.text)
-        return res
-
-    # Using webhook from botpress, a free tool
-    def callWebhookBotpress(self, data):
-        endpoint = self.botpressWebhook
-        self.log(endpoint)
-        headers = {
-            'x-bp-secret':self.secret
-        }
-        
-        print(data)
-        res = requests.post(url=endpoint, data=data, headers=headers)
-
-        if res.status_code != 200:
-            self.sendErrorMessage("Erro ao enviar Whatsapp: " + res.text)
-
-        self.log(res.text)
-        print(f"response webhook = {res.text}")
         return res
 
     def log(self, message):
