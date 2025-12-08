@@ -61,6 +61,7 @@ class App_Services:
         res = requests.get(url=endpoint)
 
         if res.status_code != 200:
+            print("sendWhatsappMessage -> Enviando mensagem de ERRO")
             self.sendErrorMessage("Erro ao enviar Whatsapp: " + res.text, isFromErrorMessage=isFromErrorMessage)
 
         self.log(res.text)
@@ -88,6 +89,7 @@ class App_Services:
         print("{0} - {1}".format(datetime.datetime.now(), message))
 
     def sendErrorMessage(self, message, isFromErrorMessage=False):
+        print(f"Enviando wpps -> sendErrorMessage isFromErrorMessage={isFromErrorMessage}")
         if not isFromErrorMessage:
             self.sendWhatsappMessage(
                 "{0} - {1}".format(datetime.datetime.now(), message), self.devPhone, self.devToken, isFromErrorMessage=True)
@@ -189,6 +191,7 @@ class App_Services:
                     # Envia de 5 em 5 mensagens, para evitar corte
                     if count % 5 == 0:
                         message = urllib.parse.quote(message)
+                        print("diff < 0 -> Enviando mensagens de 5 em 5 ...")
                         self.sendMessageExpenses(to, message)
                         message = ""
 
@@ -201,6 +204,7 @@ class App_Services:
                     # Envia de 5 em 5 mensagens, para evitar corte
                     if count % 5 == 0:
                         message = urllib.parse.quote(message)
+                        print("diff == 0 -> Enviando mensagens de 5 em 5 ...")
                         self.sendMessageExpenses(to, message)
                         message = ""
 
@@ -213,6 +217,7 @@ class App_Services:
                     # Envia de 5 em 5 mensagens, para evitar corte
                     if count % 5 == 0:
                         message = urllib.parse.quote(message)
+                        print("diff < 2 -> Enviando mensagens de 5 em 5 ...")
                         self.sendMessageExpenses(to, message)
                         message = ""
 
@@ -221,11 +226,12 @@ class App_Services:
                 datetime.datetime.now().day, datetime.datetime.now().month, datetime.datetime.now().year)
         message = urllib.parse.quote(message)
 
-        print("SENDING WHATSAPP")
+        print("self.sendMessageExpenses(to, message) -> Enviando mensagem ...")
         return self.sendMessageExpenses(to, message)
 
     def sendMessageExpenses(self, to, message):
         if to == None or to == 'dev':
+            print("Enviando mensagem para DEV")
             return self.sendWhatsappMessage(message, self.devPhone, self.devToken)
         elif to == "all":
             self.sendWhatsappMessage(message, self.devPhone, self.devToken)
