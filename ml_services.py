@@ -15,6 +15,12 @@ class ML_services:
     def __init__(self):
         load_dotenv()
         self.meliEndpoint = "https://api.mercadolibre.com"
+        self.shipmentStatus = {"handling":"Em preparação",
+                        "ready_to_ship":"Pronto para enviar",
+                        "delivered":"Entregue"}
+        self.SLAStatus = {"on_time":"No prazo",
+                            "delayed":"Atrasado",
+                            "early":"Adiantado"}
 
     def encrypt(self, data):
         key = os.getenv("CLIENT_SECRET")
@@ -121,6 +127,14 @@ class ML_services:
                 if canceled is None and not notified: # and diffDates < 15:
                     message = f"⚠️ *VENDA NO MERCADO LIVRE:* ⚠️\n*{data.json()['order_items'][0]['quantity']}* - *{data.json()['order_items'][0]['item']['title']}*"
                     
+                    # Get shipment info and details to add in message
+                    try:
+                        shipmentMessage = self.getShipmentInfo(data.json()['shipping']['id'])
+ 
+                        message += shipmentMessage
+                    except:
+                        print("Erro ao obter informações do frete")
+                    
                     # Send request to botpress webhook
                     data = json.dumps({
                         "topic":"new_order",
@@ -204,7 +218,40 @@ class ML_services:
             return data.json()['title']
         except:
             return "Não foi possível obter o produto"
-
+ 
+    def getShipmentSLA(self, id, headers):
+        try:
+            data = requests.get(self.meliEndpoint + f"/shipments/{id}/sla", headers=headers)
+            expected_date_obj = datetime.fromisoformat(data.json()['expected_date'].replace('Z', '+00:00'))
+ 
+            SLAInfo = f"*Enviar até* *{expected_date_obj.strftime("%d/%m/%Y %H:%M")}*\n_Status do envio:_ *{self.SLAStatus[data.json()['status']]}*"
+            return SLAInfo
+        except Exception as e:
+            print(f"Erro ao obter informações da SLA - {e}")
+            return "Erro ao obter informações da SLA"
+ 
+    def getShipmentInfo(self, id):
+        try:
+ 
+            token = self.refreshToken()
+               
+            headers = {
+            'Authorization': f"Bearer {token}"
+            }
+ 
+            data = requests.get(self.meliEndpoint + f"/shipments/{id}", headers=headers)
+ 
+            shipmentInfo = f"_Status:_ *{self.shipmentStatus[data.json()['status']]}*\n"
+ 
+            SLAInfo = self.getShipmentSLA(id, headers)
+ 
+            shipmentInfo += SLAInfo
+           
+            return shipmentInfo
+        except Exception as e:
+            print(f"Erro ao obter informações de envio: {e}")
+            return "Erro ao obter informações de envio"
+ 
     def answerQuestion(self, questionId, answer):
         try:
             
