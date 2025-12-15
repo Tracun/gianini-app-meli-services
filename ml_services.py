@@ -125,7 +125,7 @@ class ML_services:
                 # Não notifica caso a diferenca da data closed e lastUpdate maior que 15 minutos
                 print(f'Diff {diffDates} minutes')
                 if canceled is None and not notified: # and diffDates < 15:
-                    message = f"⚠️ *VENDA NO MERCADO LIVRE:* ⚠️\n*{data.json()['order_items'][0]['quantity']}* - *{data.json()['order_items'][0]['item']['title']}*"
+                    message = f"⚠️ *VENDA NO MERCADO LIVRE:* ⚠️\n*{data.json()['order_items'][0]['quantity']}* - *{data.json()['order_items'][0]['item']['title']}*\n\n"
                     
                     # Get shipment info and details to add in message
                     try:
