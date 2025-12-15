@@ -224,7 +224,7 @@ class ML_services:
             data = requests.get(self.meliEndpoint + f"/shipments/{id}/sla", headers=headers)
             expected_date_obj = datetime.fromisoformat(data.json()['expected_date'].replace('Z', '+00:00'))
  
-            SLAInfo = f"*Enviar até* *{expected_date_obj.strftime("%d/%m/%Y %H:%M")}*\n_Status do envio:_ *{self.SLAStatus[data.json()['status']]}*"
+            SLAInfo = f'*Enviar até* *{expected_date_obj.strftime("%d/%m/%Y %H:%M")}*\n_Status do envio:_ *{self.SLAStatus[data.json()["status"]]}*'
             return SLAInfo
         except Exception as e:
             print(f"Erro ao obter informações da SLA - {e}")
