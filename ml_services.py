@@ -17,7 +17,8 @@ class ML_services:
         self.meliEndpoint = "https://api.mercadolibre.com"
         self.shipmentStatus = {"handling":"Em preparação",
                         "ready_to_ship":"Pronto para enviar",
-                        "delivered":"Entregue"}
+                        "delivered":"Entregue",
+                        "pending":"Pendente, Envio na data abaixo"}
         self.SLAStatus = {"on_time":"No prazo",
                             "delayed":"Atrasado",
                             "early":"Adiantado"}
