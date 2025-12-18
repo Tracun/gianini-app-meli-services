@@ -120,6 +120,9 @@ class ML_services:
                 notified = DB().isNotified(id)
                 print(f"Order already notified? = {notified}")
                 
+                if isTest:
+                    notified = False
+                
                 if(not notified):
                     DB().insert_notified(id)
                 
