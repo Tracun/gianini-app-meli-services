@@ -85,7 +85,7 @@ def notifications():
     return {"message":"received"}, 200
 
 @app.route('/test_notifications', methods=["POST"])
-def notifications():
+def test_notifications():
     thread = threading.Thread(target=notifying_running_task, kwargs={
                     'body': request.json, 'isTest':True})
     thread.start()
