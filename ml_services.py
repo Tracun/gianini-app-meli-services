@@ -120,12 +120,12 @@ class ML_services:
                 notified = DB().isNotified(id)
                 print(f"Order already notified? = {notified}")
                 
-                if isTest:
-                    notified = False
-                
                 if(not notified):
                     DB().insert_notified(id)
                 
+                if isTest:
+                    notified = False
+                    
                 # Não notifica caso a diferenca da data closed e lastUpdate maior que 15 minutos
                 print(f'Diff {diffDates} minutes')
                 if canceled is None and not notified: # and diffDates < 15:
