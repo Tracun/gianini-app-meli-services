@@ -83,16 +83,26 @@ def notifications():
     thread.start()
     
     return {"message":"received"}, 200
+
+@app.route('/test_notifications', methods=["POST"])
+def notifications():
+    thread = threading.Thread(target=notifying_running_task, kwargs={
+                    'body': request.json, 'isTest':True})
+    thread.start()
+    
+    return {"message":"received"}, 200
     
 def notifying_running_task(**kwargs):
         json = kwargs.get('body', {})
+        isTest = kwargs.get('isTest', False)
+        
         print("Starting notifying task")
         
         print("##################################################################\n")
-        print(f"notifying_running_task JSON = {json}")
+        print(f"notifying_running_task isTest = {isTest} & JSON = {json}")
         print("##################################################################\n")
         
-        ML_services().notify(json['topic'], json['resource'])
+        ML_services().notify(json['topic'], json['resource'], isTest=isTest)
 
 if __name__ == '__main__':
     #app.run(debug=True)

@@ -13,7 +13,7 @@ class Services:
             'https://gianini-manutencao.firebaseio.com/', None)
         self.whatsappURL = "https://api.callmebot.com/whatsapp.php?"
         self.botpressWebhook = "https://webhook.botpress.cloud/e7c8cf69-de6d-48ce-b445-9a9fea2313ca"
-        self.myWhatsAppApi = "https://competent-nonentertaining-coral.ngrok-free.app"
+        self.myWhatsAppApi = "http://98.80.104.189:8080"
         self.gianiniPhone = ""
         self.gianiniToken = ""
         self.devPhone = ""
@@ -55,7 +55,7 @@ class Services:
         self.amadeuToken = os.getenv('AMADEUTOKEN')
         
         self.secret = os.getenv('SECRET_WEBHOOK')
-        self.secret = os.getenv('MY_API_TOKEN')
+        self.myApiToken = os.getenv('MY_API_TOKEN')
         
         self.to = os.getenv('TO')
 
@@ -98,8 +98,14 @@ class Services:
             strDate, '%Y-%m-%d %H:%M:%S.%f')
         return date_time_obj
         
-    def sendMessage(self, message):
-        if self.to == None or self.to == 'dev':
+    def sendMessage(self, message, isTest=False):
+        # Faz o teste enviando na minha API
+        try:
+            self.sendWhatsappMessageMyApi(message=message, phone="")
+        except Exception as e:
+            print(f"Erro ao enviar via MyApi: {e}")
+            
+        if self.to == None or self.to == 'dev' or isTest:
             return self.sendWhatsappMessage(message, self.devPhone, self.devToken)
         elif self.to == "all":
             self.sendWhatsappMessage(message, self.devPhone, self.devToken)
@@ -122,6 +128,22 @@ class Services:
 
         self.log(res.text)
         return res
+
+    # Using CallMeBot, a free tool
+    def sendWhatsappMessageMyApi(self, message, phone, isFromErrorMessage=False):
+
+        payload = f'number=5511949477816&message={message}'
+        headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': f'Bearer {self.myApiToken}'
+        }
+
+        res = requests.request("POST", f"{self.myWhatsAppApi}/chat-message", headers=headers, data=payload)
+
+        print(res.text)
+        self.log(res.text)
+        return res
+
 
     def log(self, message):
         print("{0} - {1}".format(datetime.datetime.now(), message))
