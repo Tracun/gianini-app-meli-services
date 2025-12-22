@@ -226,6 +226,7 @@ class ML_services:
     def getShipmentSLA(self, id, headers):
         try:
             data = requests.get(self.meliEndpoint + f"/shipments/{id}/sla", headers=headers)
+            print(f"SLA Data = {data.json()}")
             expected_date_obj = datetime.fromisoformat(data.json()['expected_date'].replace('Z', '+00:00'))
  
             SLAInfo = f'*Enviar até* *{expected_date_obj.strftime("%d/%m/%Y %H:%M")}*\n_Status do envio:_ *{self.SLAStatus[data.json()["status"]]}*'
@@ -244,7 +245,8 @@ class ML_services:
             }
  
             data = requests.get(self.meliEndpoint + f"/shipments/{id}", headers=headers)
- 
+            print(f"Shipment Data = {data.json()}")
+            
             shipmentInfo = f"_Status:_ *{self.shipmentStatus[data.json()['status']]}*\n"
  
             SLAInfo = self.getShipmentSLA(id, headers)
