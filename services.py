@@ -13,7 +13,7 @@ class Services:
             'https://gianini-manutencao.firebaseio.com/', None)
         self.whatsappURL = "https://api.callmebot.com/whatsapp.php?"
         self.botpressWebhook = "https://webhook.botpress.cloud/e7c8cf69-de6d-48ce-b445-9a9fea2313ca"
-        self.myWhatsAppApi = "http://competent-nonentertaining-coral.ngrok-free.app"
+        self.myWhatsAppApi = "204.12.236.151:8000"
         self.gianiniPhone = ""
         self.gianiniToken = ""
         self.devPhone = ""
