@@ -105,7 +105,9 @@ class ML_services:
             # Transforma em caminho a resource de messages
             # 3f6da1e35ac84f70a24af7360d24c7bc -> messages/3f6da1e35ac84f70a24af7360d24c7bc
             if topic == 'messages':
-                resource = f"/messages/{resource}"
+                resource = f"/{topic}/{resource}"
+                print(f"resource = {resource}")
+                print(f"self.meliEndpoint + resource = {self.meliEndpoint + resource}")
                 
             data = requests.get(self.meliEndpoint + resource, headers=headers)
             
