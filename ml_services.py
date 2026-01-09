@@ -101,11 +101,20 @@ class ML_services:
         'Authorization': f"Bearer {token}"
         }
         try:
-            data = requests.get(self.meliEndpoint + resource, headers=headers)
-            id = str(data.json()['id'])
             
-            print(f"data = {data.json()}")
-            print(f"ID = {id}")
+            # Transforma em caminho a resource de messages
+            # 3f6da1e35ac84f70a24af7360d24c7bc -> messages/3f6da1e35ac84f70a24af7360d24c7bc
+            if topic == 'messages':
+                resource = f"messages/{resource}"
+                
+            data = requests.get(self.meliEndpoint + resource, headers=headers)
+            
+            try:
+                print(f"data = {data.json()}")
+                id = str(data.json()['id'])
+                print(f"ID = {id}")
+            except:
+                pass
             
             if topic == 'orders' or topic == 'orders_v2':
                 
@@ -193,7 +202,7 @@ class ML_services:
                 else:
                     return 'Pergunta já notificada, ignorando...'
             elif topic == 'messages':
-                if data.json()['status'] == 'UNANSWERED':
+                if data.json()['actions'] == 'created':
                     notified = False
                     notified = DB().isNotified(id)
                     print(f"Messages already notified? = {notified}")
@@ -202,7 +211,7 @@ class ML_services:
                         DB().insert_notified(id)
                     
                     if not notified:
-                        message = f"⚠️ *NOVA MENSAGEM DENTRO EM UMA VENDA:* ⚠️\n*{self.treatData(data.json()['messages']['text'])}*"
+                        message = f"⚠️ *NOVA MENSAGEM DENTRO DE UMA VENDA:* ⚠️\n*{self.treatData(data.json()['messages']['text'])}*"
                     else:
                         return 'Pergunta já notificada, ignorando...'
                 else:
