@@ -133,7 +133,7 @@ class Services:
     # Using my API
     def sendWhatsappMessage(self, message, phone, isFromErrorMessage=False):
 
-        payload = f'number={phone.replace('+', '')}&message={message}'
+        payload = f'number={phone.replace("+", "")}&message={message}'
         headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': f'Bearer {self.myApiToken}'
