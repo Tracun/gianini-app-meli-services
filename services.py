@@ -99,40 +99,41 @@ class Services:
         return date_time_obj
         
     def sendMessage(self, message, isTest=False):
-        # Faz o teste enviando na minha API
-        try:
-            self.sendWhatsappMessageMyApi(message=message, phone="")
-        except Exception as e:
-            print(f"Erro ao enviar via MyApi: {e}")
             
         if self.to == None or self.to == 'dev' or isTest:
-            return self.sendWhatsappMessage(message, self.devPhone, self.devToken)
+            return self.sendWhatsappMessage(message, self.devPhone)
         elif self.to == "all":
-            self.sendWhatsappMessage(message, self.devPhone, self.devToken)
-            self.sendWhatsappMessage(message, self.gianiniPhone, self.gianiniToken)
-            return self.sendWhatsappMessage(message, self.franciscoPhone, self.franciscoToken)
+            self.sendWhatsappMessage(message, self.devPhone)
+            self.sendWhatsappMessage(message, self.gianiniPhone,)
+            return self.sendWhatsappMessage(message, self.franciscoPhone)
         elif self.to == "gianini":
-            return self.sendWhatsappMessage(message, self.gianiniPhone, self.gianiniToken)
+            return self.sendWhatsappMessage(message, self.gianiniPhone)
         return None
 
     # Using CallMeBot, a free tool
-    def sendWhatsappMessage(self, message, phone, apiKey, isFromErrorMessage=False):
-        endpoint = self.whatsappURL + \
-            "phone={0}&text={1}&apikey={2}".format(phone, message, apiKey)
-        self.log(endpoint)
+    def sendWhatsappMessageCallMeBot(self, message, phone, apiKey, isFromErrorMessage=False):
+        try:
+            endpoint = self.whatsappURL + \
+                "phone={0}&text={1}&apikey={2}".format(phone, message, apiKey)
+            self.log(endpoint)
 
-        res = requests.get(url=endpoint)
+            res = requests.get(url=endpoint)
 
-        if res.status_code != 200:
-            self.sendErrorMessage("Erro ao enviar Whatsapp: " + res.text, isFromErrorMessage=isFromErrorMessage)
+            if res.status_code != 200:
+                pass
+            # TODO send an error message from mail or whatever to know that we have un issue on sending whatsapp message
+                # self.sendErrorMessage("Erro ao enviar Whatsapp: " + res.text, isFromErrorMessage=isFromErrorMessage)
 
-        self.log(res.text)
+            self.log(res.text)
+        except Exception as e:
+            print(f"Erro ao enviar via MyApi: {e}")
+            return None
         return res
 
-    # Using CallMeBot, a free tool
-    def sendWhatsappMessageMyApi(self, message, phone, isFromErrorMessage=False):
+    # Using my API
+    def sendWhatsappMessage(self, message, phone, isFromErrorMessage=False):
 
-        payload = f'number=5511949477816&message={message}'
+        payload = f'number={phone.replace('+', '')}&message={message}'
         headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': f'Bearer {self.myApiToken}'
