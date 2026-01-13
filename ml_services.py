@@ -105,7 +105,8 @@ class ML_services:
             # Transforma em caminho a resource de messages
             # 3f6da1e35ac84f70a24af7360d24c7bc -> messages/3f6da1e35ac84f70a24af7360d24c7bc
             if topic == 'messages':
-                resource = f"/{topic}/{resource}"
+                # https://api.mercadolibre.com/messages/unread/$RESOURCE?tag=post_sale
+                resource = f"/{topic}/unread?role=seller&tag=post_sale"
                 print(f"resource = {resource}")
                 print(f"self.meliEndpoint + resource = {self.meliEndpoint + resource}")
                 
