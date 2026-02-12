@@ -14,7 +14,7 @@ class App_Services:
         self.firebaseApp = firebase.FirebaseApplication(
             'https://gianini-manutencao.firebaseio.com/', None)
         self.whatsappURL = "https://api.callmebot.com/whatsapp.php?"
-        self.myWhatsAppApi = "https://competent-nonentertaining-coral.ngrok-free.app"
+        self.myWhatsAppApi = "http://204.12.236.151:8000"
         self.gianiniPhone = ""
         self.gianiniToken = ""
         self.devPhone = ""
@@ -40,6 +40,8 @@ class App_Services:
         
         self.secret = os.getenv('SECRET_WEBHOOK')
         self.secret = os.getenv('MY_API_TOKEN')
+        
+        self.myWhatsAppApi = os.getenv('MY_API_WPP_URL')
         
     def sendMessage(self, to, message):
         if to == None or to == 'dev':

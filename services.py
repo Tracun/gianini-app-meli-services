@@ -18,8 +18,8 @@ class Services:
         self.gianiniToken = ""
         self.devPhone = ""
         self.devToken = ""
-        self.franciscoPhone = ""
-        self.franciscoToken = ""
+        self.gianini2Phone = ""
+        self.gianini2Token = ""
         self.version = "v1.0.3"
         self.readConfig()
         
@@ -45,8 +45,8 @@ class Services:
         self.devPhone = os.getenv('DEVPHONE')
         self.devToken = os.getenv('DEVTOKEN')
 
-        self.franciscoPhone = os.getenv('FRANCISCOPHONE')
-        self.franciscoToken = os.getenv('FRANCISCOTOKEN')
+        self.gianini2Phone = os.getenv('GIANINI2PHONE')
+        self.gianini2Token = os.getenv('GIANINI2TOKEN')
 
         self.vitorPhone = os.getenv('VITORPHONE')
         self.vitorToken = os.getenv('VITORTOKEN')
@@ -56,6 +56,8 @@ class Services:
         
         self.secret = os.getenv('SECRET_WEBHOOK')
         self.myApiToken = os.getenv('MY_API_TOKEN')
+        
+        self.myWhatsAppApi = os.getenv('MY_API_WPP_URL')
         
         self.to = os.getenv('TO')
 
@@ -104,8 +106,8 @@ class Services:
             return self.sendWhatsappMessage(message, self.devPhone)
         elif self.to == "all":
             self.sendWhatsappMessage(message, self.devPhone)
-            self.sendWhatsappMessage(message, self.gianiniPhone,)
-            return self.sendWhatsappMessage(message, self.franciscoPhone)
+            self.sendWhatsappMessage(message, self.gianini2Phone)
+            return self.sendWhatsappMessage(message, self.gianiniPhone)
         elif self.to == "gianini":
             return self.sendWhatsappMessage(message, self.gianiniPhone)
         return None
