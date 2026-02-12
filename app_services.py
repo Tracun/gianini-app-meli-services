@@ -19,8 +19,8 @@ class App_Services:
         self.gianiniToken = ""
         self.devPhone = ""
         self.devToken = ""
-        self.franciscoPhone = ""
-        self.franciscoToken = ""
+        self.gianini2Phone = ""
+        self.gianini2Token = ""
         self.version = "v1.1.0"
         self.readConfig()
 
@@ -32,8 +32,8 @@ class App_Services:
         self.devPhone = os.getenv('DEVPHONE')
         self.devToken = os.getenv('DEVTOKEN')
 
-        self.franciscoPhone = os.getenv('FRANCISCOPHONE')
-        self.franciscoToken = os.getenv('FRANCISCOTOKEN')
+        self.gianini2Phone = os.getenv('GIANINI2PHONE')
+        self.gianini2Token = os.getenv('GIANINI2TOKEN')
 
         self.amadeuPhone = os.getenv('AMADEUPHONE')
         self.amadeuToken = os.getenv('AMADEUTOKEN')
@@ -47,7 +47,7 @@ class App_Services:
         elif to == "all":
             self.sendWhatsappMessage(message, self.devPhone, self.devToken)
             self.sendWhatsappMessage(message, self.gianiniPhone, self.gianiniToken)
-            return self.sendWhatsappMessage(message, self.franciscoPhone, self.franciscoToken)
+            return self.sendWhatsappMessage(message, self.gianini2Phone, self.gianini2Token)
         elif to == "gianini":
             return self.sendWhatsappMessage(message, self.gianiniPhone, self.gianiniToken)
         return None
