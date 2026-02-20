@@ -244,7 +244,7 @@ class ML_services:
             
             try:
                 # Envia notificação de erro para telegram
-                Services().sendTelegramBkpMessage(f"Erro ao enviar mensagem, desfazendo notificação para id {id}", isTest=isTest)
+                Services().sendTelegramBkpMessage(f"Erro ao enviar mensagem no whatsapp para o id {id}", isTest=isTest)
                 
                 # Envia notificação de venda para telegram
                 Services().sendTelegramBkpMessage(f"{message}", isTest=isTest)
