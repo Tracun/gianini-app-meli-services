@@ -240,7 +240,17 @@ class ML_services:
             return 'Notificação enviada com sucesso'
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
-            print(f"Erro ao obter notificação: {e} - {exc_tb.tb_lineno}")
+            print(f"Erro ao enviar notificação: {e} - {exc_tb.tb_lineno}")
+            
+            try:
+                # Envia notificação de erro para telegram
+                Services().sendTelegramBkpMessage(f"Erro ao enviar mensagem, desfazendo notificação para id {id}", isTest=isTest)
+                
+                # Envia notificação de venda para telegram
+                Services().sendTelegramBkpMessage(f"{message}", isTest=isTest)
+            except Exception as e:
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                print(f"Erro ao enviar mensagem de erro para telegram: {e} - {exc_tb.tb_lineno}")
 
     def getItem(self, id, headers):
         try:
