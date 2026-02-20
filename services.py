@@ -21,6 +21,8 @@ class Services:
         self.gianini2Phone = ""
         self.gianini2Token = ""
         self.version = "v1.0.3"
+        self.telegramToken = ""
+        self.telegramChatId = ""
         self.readConfig()
         
     def setToken(self, data):
@@ -58,6 +60,9 @@ class Services:
         self.myApiToken = os.getenv('MY_API_TOKEN')
         
         self.myWhatsAppApi = os.getenv('MY_API_WPP_URL')
+        
+        self.telegramToken = os.getenv('TELEGRAM_TOKEN')
+        self.telegramChatId = os.getenv('TELEGRAM_CHAT_ID')
         
         self.to = os.getenv('TO')
 
@@ -111,6 +116,18 @@ class Services:
         elif self.to == "gianini":
             return self.sendWhatsappMessage(message, self.gianiniPhone)
         return None
+        
+    def sendTelegramBkpMessage(self, message, isTest=False):
+            
+        if self.to == None or self.to == 'dev' or isTest:
+            return self.sendTelegramMessage(message, self.devPhone)
+        elif self.to == "all":
+            self.sendTelegramMessage(message, self.devPhone)
+            self.sendTelegramMessage(message, self.gianini2Phone)
+            return self.sendTelegramMessage(message, self.gianiniPhone)
+        elif self.to == "gianini":
+            return self.sendTelegramMessage(message, self.gianiniPhone)
+        return None
 
     # Using CallMeBot, a free tool
     def sendWhatsappMessageCallMeBot(self, message, phone, apiKey, isFromErrorMessage=False):
@@ -142,6 +159,17 @@ class Services:
         }
 
         res = requests.request("POST", f"{self.myWhatsAppApi}/chat-message", headers=headers, data=payload)
+
+        print(res.text)
+        self.log(res.text)
+        return res
+
+    # Using telegram API
+    def sendTelegramMessage(self, message, phone, isFromErrorMessage=False):
+
+        telegram_URL = f"https://api.telegram.org/bot{self.telegramToken}/sendMessage?chat_id={self.telegramChatId}&text={message}"
+
+        res = requests.request("GET", telegram_URL)
 
         print(res.text)
         self.log(res.text)

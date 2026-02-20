@@ -222,7 +222,22 @@ class ML_services:
             else:
                 print(f"Tópico {topic} não mapeado para notificação")
                 return {"message":f"Tópico {topic} não mapeado para notificação"}, 200
-            return Services().sendMessage(message, isTest=isTest)
+            sendMessageResp = Services().sendMessage(message, isTest=isTest)
+            sendMessageResp = json.dumps(sendMessageResp)
+            
+            if sendMessageResp == None or sendMessageResp.status_code != 200:
+                DB().delete_notified(id)
+                print(f"Erro ao enviar mensagem, desfazendo notificação para id {id}")
+                
+                # Envia notificação de erro para telegram
+                Services().sendTelegramBkpMessage(f"Erro ao enviar mensagem, desfazendo notificação para id {id}", isTest=isTest)
+                
+                # Envia notificação de venda para telegram
+                Services().sendTelegramBkpMessage(f"{message}", isTest=isTest)
+                
+                return f"Erro ao enviar mensagem, desfazendo notificação para id {id}"
+            
+            return 'Notificação enviada com sucesso'
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             print(f"Erro ao obter notificação: {e} - {exc_tb.tb_lineno}")
@@ -245,7 +260,7 @@ class ML_services:
             return SLAInfo
         except Exception as e:
             print(f"Erro ao obter informações da SLA - {e}")
-            return "Erro ao obter informações da SLA"
+            return "Sem informação de SLA"
  
     def getShipmentInfo(self, id):
         try:
