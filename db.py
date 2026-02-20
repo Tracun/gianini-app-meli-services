@@ -60,6 +60,19 @@ class DB:
             return False
         finally:
             self.disconnect()
+        
+    def delete_notified(self, id, table='notified_itens'):
+        try:
+            
+            affected_count = self.cur.execute(f"DELETE FROM {table} WHERE id={id}")
+
+            return True
+            
+        except mariadb.Error as e:
+            print(f"Error connecting to MariaDB Platform: {e}")
+            return False
+        finally:
+            self.disconnect()
             
         
     def isNotified(self, id, table='notified_itens'):
